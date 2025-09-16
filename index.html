@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kids' Synthesizer</title>
+    <title>Kids' Interactive Song Maker</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.min.js"></script>
-    <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/addons/p5.sound.min.js"></script>
     <link rel="stylesheet" href="styles.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap"
@@ -14,78 +14,9 @@
   </head>
   <body>
     <div id="sketch-holder"></div>
-    <button id="learnShapes" title="Play Song">
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-          fill="#fff"
-        />
-      </svg>
-    </button>
-    <button id="toggleShapes" title="Toggle Shapes">
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2Z"
-          fill="#fff"
-        />
-      </svg>
-    </button>
-    <dialog id="learnDialog">
-      <div class="shape-info">
-        <svg
-          width="48"
-          height="48"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-            fill="#ffccbc"
-          />
-        </svg>
-      </div>
-      <button id="dialogCloseButton">
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M18 6L6 18M6 6L18 18" stroke="#fff" stroke-width="2" />
-        </svg>
-      </button>
-    </dialog>
-    <div class="keyboardCont">
-      <div class="octaveCont">
-        <div class="whiteKeyCont">
-          <button class="whiteKey" data-note="C4"></button>
-          <button class="whiteKey" data-note="D4"></button>
-          <button class="whiteKey" data-note="E4"></button>
-          <button class="whiteKey" data-note="G4"></button>
-          <button class="whiteKey" data-note="A4"></button>
-        </div>
-        <div class="blackKeyCont">
-          <div class="ghostKey"></div>
-          <div class="ghostKey"></div>
-          <div class="ghostKey"></div>
-          <div class="ghostKey"></div>
-          <div class="ghostKey"></div>
-        </div>
-      </div>
+    <div class="instructions">
+      <h1>Magic Song Maker!</h1>
+      <p>Tap or click to create a fun song with shapes!</p>
     </div>
     <script src="sketch.js"></script>
   </body>
