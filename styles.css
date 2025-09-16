@@ -1,0 +1,153 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #ffccbc, #b899eb, #80deea);
+  font-family: "Bubblegum Sans", sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#sketch-holder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+#learnShapes {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #373561;
+  border: none;
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#learnShapes:hover {
+  background-color: #4a4875;
+}
+
+#toggleShapes {
+  position: absolute;
+  top: 20px;
+  right: 60px;
+  background-color: #373561;
+  border: none;
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#toggleShapes:hover {
+  background-color: #4a4875;
+}
+
+#toggleShapes.disabled svg path {
+  fill: #888;
+}
+
+dialog[open] {
+  margin: auto;
+  padding: 1.5rem;
+  background-color: #fff;
+  border: 2px solid #373561;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 90%;
+  z-index: 20;
+}
+
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.shape-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#dialogCloseButton {
+  background-color: #373561;
+  border: none;
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#dialogCloseButton:hover {
+  background-color: #4a4875;
+}
+
+.keyboardCont {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  max-width: 400px;
+  height: 120px;
+  z-index: 10;
+}
+
+.octaveCont {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.whiteKeyCont {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.whiteKey {
+  flex: 1;
+  background-color: #fff;
+  border: 2px solid #333;
+  border-radius: 0 0 8px 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.whiteKey:hover {
+  background-color: #f0f0f0;
+}
+
+.whiteKey.active {
+  background-color: #ffccbc;
+}
+
+.blackKeyCont {
+  position: absolute;
+  top: 0;
+  display: flex;
+  height: 60%;
+  width: 100%;
+  pointer-events: none;
+}
+
+.ghostKey {
+  flex: 1;
+}
