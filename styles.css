@@ -1,51 +1,71 @@
+/* Styles the body with a gradient background and centers content using flexbox */
+/* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/background */
 body {
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(135deg, #ffccbc, #b899eb, #80deea);
-  font-family: "Bubblegum Sans", sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  overflow: hidden;
+  margin: 0; /* Removes default margin */
+  padding: 0; /* Removes default padding */
+  background: linear-gradient(
+    135deg,
+    #ffccbc,
+    #b899eb,
+    #80deea
+  ); /* Applies a colorful gradient background */
+  /* Source: https://fonts.google.com/specimen/Bubblegum+Sans */
+  font-family: "Bubblegum Sans", sans-serif; /* Sets playful Bubblegum Sans font */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/display#flex */
+  display: flex; /* Uses flexbox for layout */
+  justify-content: center; /* Horizontally centers content */
+  align-items: center; /* Vertically centers content */
+  height: 100vh; /* Sets body height to full viewport height */
+  overflow: hidden; /* Prevents scrolling */
 }
 
+/* Styles the p5.js canvas container to cover the entire viewport */
+/* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/position */
 #sketch-holder {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  position: absolute; /* Positions canvas absolutely to cover the viewport */
+  top: 0; /* Aligns to top edge */
+  left: 0; /* Aligns to left edge */
+  width: 100%; /* Full width of viewport */
+  height: 100%; /* Full height of viewport */
 }
 
+/* Styles the instructions container with absolute positioning and fade-out animation */
+/* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/position */
 .instructions {
-  position: absolute;
-  top: 20px;
-  text-align: center;
-  color: #fff;
-  z-index: 10;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  animation: fadeOut 5s forwards;
-  pointer-events: none;
+  position: absolute; /* Positions instructions over the canvas */
+  top: 20px; /* Places 20px from the top */
+  text-align: center; /* Centers text */
+  color: #fff; /* White text color for contrast */
+  z-index: 10; /* Ensures instructions appear above canvas */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/text-shadow */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Adds subtle shadow for readability */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/animation */
+  animation: fadeOut 5s forwards; /* Applies fade-out animation over 5 seconds */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events */
+  pointer-events: none; /* Prevents instructions from blocking interactions */
 }
 
+/* Styles the main heading */
 h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
+  font-size: 2.5rem; /* Large font size for prominence */
+  margin-bottom: 10px; /* Space below heading */
 }
 
+/* Styles the paragraph text */
 p {
-  font-size: 1.5rem;
+  font-size: 1.5rem; /* Moderately large font for readability */
 }
 
+/* Defines the fade-out animation for the instructions */
+/* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/@keyframes */
 @keyframes fadeOut {
   0% {
-    opacity: 1;
+    opacity: 1; /* Fully visible at start */
   }
   80% {
-    opacity: 1;
+    opacity: 1; /* Remains visible until 80% of animation */
   }
   100% {
-    opacity: 0;
+    opacity: 0; /* Fully transparent at end */
   }
 }
