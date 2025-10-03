@@ -30,19 +30,18 @@
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      onload="console.log('Font Awesome loaded successfully at', new Date().toLocaleString('en-AU', { timeZone: 'Australia/Sydney' }));"
+      onerror="console.error('Font Awesome failed to load at', new Date().toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })); document.body.classList.add('font-awesome-fail');"
     />
   </head>
   <body>
     <!-- Navigation bar for song selection -->
     <nav class="navbar">
-      <button class="song-btn" data-song="itsybitsy" title="Itsy Bitsy Spider">
-        <i class="fas fa-spider"></i>
+      <button class="song-btn" data-song="itsy" title="Itsy Bitsy Spider">
+        <i class="fa-solid fa-spider"></i>
       </button>
-      <button class="song-btn" data-song="baabaa" title="Baa Baa Black Sheep">
-        <i class="fas fa-sheep"></i>
-      </button>
-      <button class="song-btn" data-song="bingo" title="BINGO">
-        <i class="fas fa-dog"></i>
+      <button class="song-btn" data-song="happy" title="Happy Birthday">
+        <i class="fas fa-birthday-cake"></i>
       </button>
       <button
         class="song-btn"

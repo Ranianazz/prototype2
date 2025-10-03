@@ -1,3 +1,9 @@
+/* Applies global box-sizing to ensure padding and borders are included in element dimensions */
+/* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing */
+* {
+  box-sizing: border-box;
+}
+
 /* Styles the body with a gradient background and centers content using flexbox */
 /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/background */
 body {
@@ -43,6 +49,29 @@ body {
   cursor: pointer; /* Pointer cursor on hover */
   transition: transform 0.2s; /* Smooth scale on hover */
   /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/transition */
+}
+
+/* Specific styling for Mary Had a Little Lamb button to ensure dog icon visibility */
+.song-btn[data-song="mary"] {
+  color: #2b2b2b; /* Darker icon color for contrast */
+  position: relative; /* For positioning fallback SVG */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Subtle shadow for visibility */
+}
+
+/* Hide SVG fallback unless Font Awesome fails */
+.song-btn[data-song="mary"] .dog-icon-fallback {
+  display: none; /* Hidden by default */
+  width: 2rem; /* Matches font-size */
+  height: 2rem;
+  fill: #2b2b2b; /* Matches icon color */
+}
+
+/* Show SVG fallback if Font Awesome fails */
+.font-awesome-fail .song-btn[data-song="mary"] .fa-solid.fa-dog {
+  display: none; /* Hide Font Awesome icon */
+}
+.font-awesome-fail .song-btn[data-song="mary"] .dog-icon-fallback {
+  display: block; /* Show SVG fallback */
 }
 
 /* Hover effect for buttons */
