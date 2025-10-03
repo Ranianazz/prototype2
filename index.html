@@ -25,8 +25,33 @@
       href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap"
       rel="stylesheet"
     />
+    <!-- Imports Font Awesome for icons -->
+    <!-- Source: https://fontawesome.com/ -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
   </head>
   <body>
+    <!-- Navigation bar for song selection -->
+    <nav class="navbar">
+      <button class="song-btn" data-song="itsybitsy" title="Itsy Bitsy Spider">
+        <i class="fas fa-spider"></i>
+      </button>
+      <button class="song-btn" data-song="baabaa" title="Baa Baa Black Sheep">
+        <i class="fas fa-sheep"></i>
+      </button>
+      <button class="song-btn" data-song="bingo" title="BINGO">
+        <i class="fas fa-dog"></i>
+      </button>
+      <button
+        class="song-btn"
+        data-song="twinkle"
+        title="Twinkle Twinkle Little Star"
+      >
+        <i class="fas fa-star"></i>
+      </button>
+    </nav>
     <!-- Container for the p5.js canvas where the interactive sketch will be rendered -->
     <!-- Source: https://p5js.org/reference/#/p5/setup -->
     <div id="sketch-holder"></div>
@@ -35,7 +60,7 @@
       <!-- Main heading for the interactive application -->
       <h1>Magic Song Maker!</h1>
       <!-- Brief instructions for user interaction -->
-      <p>Tap or click to create a fun song with shapes!</p>
+      <p>Tap or click to create a fun song with shapes! Pick a song above!</p>
     </div>
     <!-- Includes external JavaScript file containing the p5.js sketch logic -->
     <script src="sketch.js"></script>

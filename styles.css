@@ -13,10 +13,46 @@ body {
   font-family: "Bubblegum Sans", sans-serif; /* Sets playful Bubblegum Sans font */
   /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/display#flex */
   display: flex; /* Uses flexbox for layout */
-  justify-content: center; /* Horizontally centers content */
-  align-items: center; /* Vertically centers content */
+  flex-direction: column; /* Stacks navbar and content vertically */
+  justify-content: flex-start; /* Aligns content to top */
+  align-items: center; /* Horizontally centers content */
   height: 100vh; /* Sets body height to full viewport height */
   overflow: hidden; /* Prevents scrolling */
+}
+
+/* Styles the navigation bar */
+.navbar {
+  position: absolute; /* Positions navbar at top */
+  top: 0; /* Aligns to top edge */
+  width: 100%; /* Full width */
+  background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+  text-align: center; /* Centers buttons */
+  padding: 10px 0; /* Vertical padding */
+  z-index: 20; /* Above canvas and instructions */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+/* Styles the song selection buttons */
+.song-btn {
+  background: none; /* No background */
+  border: none; /* No border */
+  font-size: 2rem; /* Large icon size */
+  color: #333; /* Dark icon color */
+  margin: 0 20px; /* Horizontal spacing */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: transform 0.2s; /* Smooth scale on hover */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/transition */
+}
+
+/* Hover effect for buttons */
+.song-btn:hover {
+  transform: scale(1.2); /* Scales up on hover */
+}
+
+/* Active song button style */
+.song-btn.active {
+  color: #ff6f61; /* Highlight color for active song */
 }
 
 /* Styles the p5.js canvas container to cover the entire viewport */
@@ -33,7 +69,7 @@ body {
 /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/position */
 .instructions {
   position: absolute; /* Positions instructions over the canvas */
-  top: 20px; /* Places 20px from the top */
+  top: 60px; /* Places below navbar */
   text-align: center; /* Centers text */
   color: #fff; /* White text color for contrast */
   z-index: 10; /* Ensures instructions appear above canvas */

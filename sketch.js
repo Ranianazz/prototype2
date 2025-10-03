@@ -5,36 +5,122 @@ let shapes = []; // Array to store shape objects for animation
 let noteIndex = 0; // Tracks current note in the song sequence
 const cMajorPentatonic = [261.63, 293.66, 329.63, 392.0, 440.0]; // Frequencies for C major pentatonic scale (C4, D4, E4, G4, A4)
 // Source: https://en.wikipedia.org/wiki/Pentatonic_scale
-const songSequence = [
-  0,
-  0,
-  3,
-  3,
-  4,
-  4,
-  3, // C4, C4, G4, G4, A4, A4, G4
-  2,
-  2,
-  1,
-  1,
-  0,
-  0,
-  1, // E4, E4, D4, D4, C4, C4, D4
-  3,
-  3,
-  2,
-  2,
-  1,
-  1,
-  0, // G4, G4, E4, E4, D4, D4, C4
-  3,
-  3,
-  2,
-  2,
-  1,
-  1,
-  0, // G4, G4, E4, E4, D4, D4, C4
-]; // Sequence inspired by "Twinkle Twinkle Little Star"
+const songSequences = {
+  itsybitsy: [
+    0,
+    0,
+    1,
+    2,
+    2,
+    1,
+    0, // C4, C4, D4, E4, E4, D4, C4
+    1,
+    1,
+    2,
+    3,
+    3,
+    2, // D4, D4, E4, G4, G4, E4
+    0,
+    0,
+    1,
+    2,
+    2,
+    1,
+    0, // C4, C4, D4, E4, E4, D4, C4
+    1,
+    2,
+    3,
+    2,
+    1,
+    0, // D4, E4, G4, E4, D4, C4
+  ], // Itsy Bitsy Spider
+  oldmacdonald: [
+    0,
+    0,
+    0,
+    0,
+    2,
+    2,
+    0, // C4, C4, C4, C4, E4, E4, C4
+    1,
+    1,
+    0,
+    0,
+    1,
+    1, // D4, D4, C4, C4, D4, D4
+    2,
+    2,
+    3,
+    3,
+    2,
+    1,
+    0, // E4, E4, G4, G4, E4, D4, C4
+    0,
+    0,
+    0,
+    0,
+    0,
+    0, // C4, C4, C4, C4, C4, C4
+  ], // Old MacDonald Had a Farm
+  bingo: [
+    0,
+    0,
+    2,
+    2,
+    3,
+    3,
+    2, // C4, C4, E4, E4, G4, G4, E4
+    1,
+    1,
+    0,
+    0,
+    1,
+    1, // D4, D4, C4, C4, D4, D4
+    2,
+    2,
+    3,
+    3,
+    2,
+    1,
+    0, // E4, E4, G4, G4, E4, D4, C4
+    0,
+    0,
+    0,
+    0,
+    0,
+    0, // C4, C4, C4, C4, C4, C4
+  ], // BINGO
+  happy: [
+    0,
+    0,
+    1,
+    2,
+    0,
+    2,
+    1, // C4, C4, D4, E4, C4, E4, D4
+    0,
+    0,
+    1,
+    2,
+    1,
+    0, // C4, C4, D4, E4, D4, C4
+    1,
+    1,
+    2,
+    3,
+    2,
+    1,
+    0, // D4, D4, E4, G4, E4, D4, C4
+    0,
+    0,
+    1,
+    2,
+    1,
+    0, // C4, C4, D4, E4, D4, C4
+  ], // If You're Happy and You Know It
+};
+let currentSong = "itsybitsy"; // Default song
+let reverb, lowPass, delay, panner; // Audio effects
 
 // Sets up the p5.js canvas and audio context
 // Source: https://p5js.org/reference/#/p5/setup
@@ -44,8 +130,40 @@ function setup() {
   background(255, 255, 255, 0); // Sets transparent background
   // Source: https://p5js.org/reference/#/p5/getAudioContext
   audioContext = getAudioContext(); // Initializes p5.js audio context
+  // Initialize audio effects
+  // Source: https://p5js.org/reference/#/p5.Reverb
+  reverb = new p5.Reverb();
+  reverb.drywet(0.3); // Moderate reverb mix
+  // Source: https://p5js.org/reference/#/p5.Filter
+  lowPass = new p5.Filter("lowpass");
+  lowPass.freq(800); // Low-pass filter at 800 Hz
+  // Source: https://p5js.org/reference/#/p5.Delay
+  delay = new p5.Delay();
+  delay.delayTime(0.2); // 200ms delay
+  delay.feedback(0.4); // Moderate feedback
+  // Source: https://p5js.org/reference/#/p5.Panner
+  panner = new p5.Panner();
   console.log("Setup complete, audio context state:", audioContext.state); // Logs audio context state
   noLoop(); // Disables automatic draw loop to optimize performance
+  setupSongButtons(); // Sets up song selection buttons
+}
+
+// Sets up event listeners for song selection buttons
+function setupSongButtons() {
+  const buttons = document.querySelectorAll(".song-btn");
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      currentSong = button.dataset.song; // Sets current song
+      noteIndex = 0; // Resets note index
+      buttons.forEach((btn) => btn.classList.remove("active")); // Removes active class from all buttons
+      button.classList.add("active"); // Adds active class to clicked button
+      console.log("Selected song:", currentSong); // Logs song selection
+    });
+  });
+  // Set default song button as active
+  document
+    .querySelector('.song-btn[data-song="itsybitsy"]')
+    .classList.add("active");
 }
 
 // Draws and updates all shapes on the canvas
@@ -95,90 +213,167 @@ function mousePressed() {
   }
 }
 
-// Creates a chime-like sound and a shape at the specified coordinates
+// Creates a note with instrument-specific sound and a shape at the specified coordinates
 function createNoteAndShape(x, y) {
-  console.log("Creating note and shape at:", x, y); // Logs creation position
+  console.log("Creating note and shape at:", x, y, "for song:", currentSong); // Logs creation position and song
   try {
     // Primary oscillator for the base tone
     // Source: https://p5js.org/reference/#/p5.Oscillator
     let osc1 = new p5.Oscillator(); // Creates a new p5.js oscillator
-    osc1.setType("sine"); // Sets sine wave for soft tone
-    let freq = cMajorPentatonic[songSequence[noteIndex % songSequence.length]]; // Selects frequency from song sequence
+    let osc2 = new p5.Oscillator(); // Secondary oscillator for harmonic richness
+    let freq =
+      cMajorPentatonic[
+        songSequences[currentSong][
+          noteIndex % songSequences[currentSong].length
+        ]
+      ]; // Selects frequency from current song sequence
     let duration = random(0.4, 0.6); // Random duration for note
-    let amplitude = random(0.3, 0.5); // Random amplitude for chime effect
-    osc1.freq(freq); // Sets oscillator frequency
-    osc1.amp(amplitude); // Sets oscillator amplitude
-    osc1.start(); // Starts the oscillator
-    osc1.amp(0, duration); // Fades out amplitude over duration
+    let amplitude = random(0.3, 0.5); // Random amplitude for effect
 
-    // Secondary oscillator for harmonic richness
-    let osc2 = new p5.Oscillator(); // Creates a second oscillator
-    osc2.setType("sine"); // Sets sine wave
-    osc2.freq(freq * 2); // Sets frequency an octave higher
-    osc2.amp(amplitude * 0.3); // Lower amplitude for harmonic
-    // Source: https://p5js.org/reference/#/p5.Oscillator/detune
-    osc2.detune.setValueAtTime(random(-10, 10), 0); // Adds slight detune for warmth
-    osc2.start(); // Starts the oscillator
-    osc2.amp(0, duration); // Fades out amplitude over duration
+    // Configure instrument based on song
+    if (currentSong === "itsybitsy") {
+      osc1.setType("triangle"); // Triangle wave for light, spidery feel
+      osc2.setType("triangle");
+      osc1.freq(freq); // Sets oscillator frequency
+      osc1.amp(amplitude); // Sets amplitude
+      osc2.freq(freq * 2); // Octave higher
+      osc2.amp(amplitude * 0.3); // Lower amplitude for harmonic
+      osc2.detune.setValueAtTime(random(-10, 10), 0); // Slight detune
+      osc1.connect(reverb); // Apply reverb
+      osc2.connect(reverb);
+    } else if (currentSong === "oldmacdonald") {
+      osc1.setType("square"); // Square wave for rustic tone
+      osc2.setType("square");
+      osc1.freq(freq);
+      osc1.amp(amplitude);
+      osc2.freq(freq * 1.5); // Fifth higher for harmony
+      osc2.amp(amplitude * 0.2);
+      osc2.detune.setValueAtTime(random(-5, 5), 0);
+      osc1.connect(lowPass); // Apply low-pass filter
+      osc2.connect(lowPass);
+    } else if (currentSong === "bingo") {
+      osc1.setType("sawtooth"); // Sawtooth wave for lively tone
+      osc2.setType("sawtooth");
+      osc1.freq(freq);
+      osc1.amp(amplitude);
+      osc2.freq(freq * 2);
+      osc2.amp(amplitude * 0.3);
+      osc2.detune.setValueAtTime(random(-15, 15), 0);
+      panner.pan(random(-0.5, 0.5)); // Random panning
+      osc1.connect(panner);
+      osc2.connect(panner);
+    } else if (currentSong === "happy") {
+      osc1.setType("sine"); // Sine wave for bright, happy tone
+      osc2.setType("sine");
+      osc1.freq(freq);
+      osc1.amp(amplitude);
+      osc2.freq(freq * 2);
+      osc2.amp(amplitude * 0.3);
+      osc2.detune.setValueAtTime(random(-10, 10), 0);
+      osc1.connect(delay); // Apply delay
+      osc2.connect(delay);
+    }
+
+    osc1.start(); // Starts the oscillator
+    osc1.amp(0, duration); // Fades out amplitude
+    osc2.start();
+    osc2.amp(0, duration);
 
     console.log(
-      "Sound created: chime-like at",
+      "Sound created: instrument for",
+      currentSong,
+      "at",
       freq,
       "Hz, duration:",
       duration,
       "amp:",
       amplitude
     ); // Logs sound details
-    noteIndex = (noteIndex + 1) % songSequence.length; // Advances to next note in sequence
+    noteIndex = (noteIndex + 1) % songSequences[currentSong].length; // Advances to next note
   } catch (e) {
     console.error("p5.Oscillator failed:", e); // Logs any errors with p5.js oscillators
     // Fallback to raw Web Audio API
-    let freq = cMajorPentatonic[songSequence[noteIndex % songSequence.length]]; // Selects frequency
+    let freq =
+      cMajorPentatonic[
+        songSequences[currentSong][
+          noteIndex % songSequences[currentSong].length
+        ]
+      ]; // Selects frequency
     let duration = random(0.4, 0.6); // Random duration
     let amplitude = random(0.3, 0.5); // Random amplitude
 
     // Primary oscillator using Web Audio API
     // Source: https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode
     let rawOsc1 = audioContext.createOscillator(); // Creates oscillator
-    rawOsc1.type = "sine"; // Sets sine wave
-    rawOsc1.frequency.setValueAtTime(freq, audioContext.currentTime); // Sets frequency
+    let rawOsc2 = audioContext.createOscillator(); // Secondary oscillator
     let gain1 = audioContext.createGain(); // Creates gain node
-    // Source: https://developer.mozilla.org/en-US/docs/Web/API/GainNode
-    gain1.gain.setValueAtTime(amplitude, audioContext.currentTime); // Sets initial gain
+    let gain2 = audioContext.createGain(); // Secondary gain node
+    let oscType, connectNode;
+
+    // Configure fallback instrument
+    if (currentSong === "itsybitsy") {
+      oscType = "triangle";
+      connectNode = audioContext.createConvolver(); // Simplified reverb fallback
+    } else if (currentSong === "oldmacdonald") {
+      oscType = "square";
+      connectNode = audioContext.createBiquadFilter();
+      connectNode.type = "lowpass";
+      connectNode.frequency.setValueAtTime(800, audioContext.currentTime);
+    } else if (currentSong === "bingo") {
+      oscType = "sawtooth";
+      connectNode = audioContext.createStereoPanner();
+      connectNode.pan.setValueAtTime(
+        random(-0.5, 0.5),
+        audioContext.currentTime
+      );
+    } else {
+      oscType = "sine";
+      connectNode = audioContext.createGain(); // Simplified delay fallback
+    }
+
+    rawOsc1.type = oscType;
+    rawOsc1.frequency.setValueAtTime(freq, audioContext.currentTime);
+    gain1.gain.setValueAtTime(amplitude, audioContext.currentTime);
     gain1.gain.exponentialRampToValueAtTime(
       0.01,
       audioContext.currentTime + duration
-    ); // Fades out gain
-    rawOsc1.connect(gain1); // Connects oscillator to gain
-    gain1.connect(audioContext.destination); // Connects gain to output
-    rawOsc1.start(); // Starts oscillator
-    rawOsc1.stop(audioContext.currentTime + duration); // Stops after duration
+    );
+    rawOsc1.connect(gain1);
+    gain1.connect(connectNode);
+    connectNode.connect(audioContext.destination);
+    rawOsc1.start();
+    rawOsc1.stop(audioContext.currentTime + duration);
 
-    // Secondary oscillator for harmonic
-    let rawOsc2 = audioContext.createOscillator(); // Creates second oscillator
-    rawOsc2.type = "sine"; // Sets sine wave
-    rawOsc2.frequency.setValueAtTime(freq * 2, audioContext.currentTime); // Sets frequency an octave higher
-    rawOsc2.detune.setValueAtTime(random(-10, 10), 0); // Adds slight detune
-    let gain2 = audioContext.createGain(); // Creates second gain node
-    gain2.gain.setValueAtTime(amplitude * 0.3, audioContext.currentTime); // Sets lower gain
+    rawOsc2.type = oscType;
+    rawOsc2.frequency.setValueAtTime(
+      freq * (currentSong === "oldmacdonald" ? 1.5 : 2),
+      audioContext.currentTime
+    );
+    rawOsc2.detune.setValueAtTime(random(-15, 15), 0);
+    gain2.gain.setValueAtTime(
+      amplitude * (currentSong === "oldmacdonald" ? 0.2 : 0.3),
+      audioContext.currentTime
+    );
     gain2.gain.exponentialRampToValueAtTime(
       0.01,
       audioContext.currentTime + duration
-    ); // Fades out gain
-    rawOsc2.connect(gain2); // Connects oscillator to gain
-    gain2.connect(audioContext.destination); // Connects gain to output
-    rawOsc2.start(); // Starts oscillator
-    rawOsc2.stop(audioContext.currentTime + duration); // Stops after duration
+    );
+    rawOsc2.connect(gain2);
+    gain2.connect(connectNode);
+    rawOsc2.start();
+    rawOsc2.stop(audioContext.currentTime + duration);
 
     console.log(
-      "Fallback sound created: chime-like at",
+      "Fallback sound created: instrument for",
+      currentSong,
+      "at",
       freq,
       "Hz, duration:",
       duration,
       "amp:",
       amplitude
     ); // Logs fallback sound details
-    noteIndex = (noteIndex + 1) % songSequence.length; // Advances to next note
+    noteIndex = (noteIndex + 1) % songSequences[currentSong].length; // Advances to next note
   }
   // Source: https://p5js.org/reference/#/p5/color
   shapes.push(
@@ -186,7 +381,7 @@ function createNoteAndShape(x, y) {
       x,
       y,
       random(50, 150), // Random size for shape
-      color(random(255), random(255), random(255), 200) // Random color with fixed alpha
+      color(random(200, 255), random(200, 255), random(200, 255), 800) // Random color with fixed alpha
     )
   ); // Adds new shape to array
 }
