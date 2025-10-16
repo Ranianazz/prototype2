@@ -1,201 +1,217 @@
-/* Applies global box-sizing to ensure padding and borders are included in element dimensions */
+/* Apply global box-sizing to ensure padding and borders are included in element dimensions, simplifying layout calculations */
 /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing */
 * {
   box-sizing: border-box;
 }
 
-/* Styles the body with a gradient background and centers content using flexbox */
+/* Style the body with a vibrant gradient background and flexbox layout for centered, responsive content */
 /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/background */
 body {
-  margin: 0; /* Removes default margin */
-  padding: 0; /* Removes default padding */
+  margin: 0; /* Remove default margin to ensure full-screen layout */
+  padding: 0; /* Remove default padding for edge-to-edge design */
   background: linear-gradient(
     135deg,
     #ffccbc,
     #b899eb,
     #80deea
-  ); /* Applies a colorful gradient background */
+  ); /* Colorful gradient (peach to purple to cyan) for a playful, kid-friendly aesthetic */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient */
   /* Source: https://fonts.google.com/specimen/Bubblegum+Sans */
-  font-family: "Bubblegum Sans", sans-serif; /* Sets playful Bubblegum Sans font */
+  font-family: "Bubblegum Sans", sans-serif; /* Use Bubblegum Sans for a rounded, fun font */
   /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/display#flex */
-  display: flex; /* Uses flexbox for layout */
-  flex-direction: column; /* Stacks navbar and content vertically */
-  justify-content: flex-start; /* Aligns content to top */
-  align-items: center; /* Horizontally centers content */
-  height: 100vh; /* Sets body height to full viewport height */
-  overflow: hidden; /* Prevents scrolling */
+  display: flex; /* Use flexbox to manage layout */
+  flex-direction: column; /* Stack navbar and content vertically */
+  justify-content: flex-start; /* Align content to top of viewport */
+  align-items: center; /* Center content horizontally */
+  height: 100vh; /* Set body height to full viewport height */
+  overflow: hidden; /* Prevent scrolling to maintain full-screen canvas */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/overflow */
 }
 
-/* Styles the navigation bar */
+/* Style the navigation bar to hold song buttons and volume controls, positioned at the top */
+/* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/position */
 .navbar {
-  position: absolute; /* Positions navbar at top */
-  top: 0; /* Aligns to top edge */
-  width: 100%; /* Full width */
-  background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
-  text-align: center; /* Centers buttons */
-  padding: 10px 0; /* Vertical padding */
-  z-index: 20; /* Above canvas and instructions */
+  position: absolute; /* Fix navbar at top of viewport */
+  top: 0; /* Align to top edge */
+  width: 100%; /* Span full viewport width */
+  background: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* Semi-transparent white for subtle contrast */
+  text-align: center; /* Center song buttons horizontally */
+  padding: 10px 0; /* Add vertical padding for spacing */
+  z-index: 20; /* Ensure navbar is above canvas and instructions */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/z-index */
   /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
-  display: flex; /* Use flexbox to align volume control and buttons */
+  display: flex; /* Use flexbox to align controls and buttons */
   align-items: center; /* Vertically center items */
-  justify-content: center; /* Center buttons, volume control will be positioned absolutely */
+  justify-content: center; /* Center song buttons, with volume control positioned absolutely */
 }
 
-/* Styles the volume control container */
+/* Style the volume control container for mute button and slider, positioned in top-right corner */
 .volume-control {
-  position: absolute; /* Position in top right */
-  right: 20px; /* Space from right edge */
-  display: flex; /* Align button and slider */
-  align-items: center; /* Vertically center */
-  gap: 10px; /* Space between button and slider */
+  position: absolute; /* Position relative to navbar */
+  right: 20px; /* Space from right edge for clean layout */
+  display: flex; /* Align mute button and slider horizontally */
+  align-items: center; /* Vertically center contents */
+  gap: 10px; /* Add spacing between button and slider */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/gap */
 }
 
-/* Styles the mute button */
+/* Style the mute button for toggling audio */
 .mute-btn {
-  background: none; /* No background */
-  border: none; /* No border */
-  font-size: 2rem; /* Match song button icon size */
-  color: #333; /* Dark icon color */
-  cursor: pointer; /* Pointer on hover */
-  transition: transform 0.2s; /* Smooth scale on hover */
+  background: none; /* No background to match icon-only aesthetic */
+  border: none; /* No border for clean look */
+  font-size: 2rem; /* Large icon size to match song buttons */
+  color: #333; /* Dark gray for contrast on semi-transparent navbar */
+  cursor: pointer; /* Indicate interactivity on hover */
+  transition: transform 0.2s; /* Smooth scale animation on hover */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/transition */
 }
 
-/* Hover effect for mute button */
+/* Hover effect for mute button to enhance interactivity */
 .mute-btn:hover {
-  transform: scale(1.2); /* Match song button hover */
+  transform: scale(
+    1.2
+  ); /* Scale up for playful feedback, matching song buttons */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/scale */
 }
 
-/* Styles the volume slider */
+/* Style the volume slider for adjusting audio level */
 #volume-slider {
-  width: 100px; /* Reasonable width for slider */
-  -webkit-appearance: none; /* Remove default browser styling */
-  appearance: none;
-  height: 8px; /* Thin track */
-  background: #fff; /* White track to match navbar */
-  border-radius: 5px; /* Rounded edges */
-  outline: none; /* Remove default outline */
-  opacity: 0.8; /* Slightly transparent */
-  transition: opacity 0.2s; /* Smooth opacity transition */
+  width: 100px; /* Fixed width for usability */
+  -webkit-appearance: none; /* Remove default WebKit styling */
+  appearance: none; /* Remove default browser styling */
+  height: 8px; /* Thin track for sleek design */
+  background: #fff; /* White track to blend with navbar */
+  border-radius: 5px; /* Rounded edges for kid-friendly look */
+  outline: none; /* Remove default focus outline */
+  opacity: 0.8; /* Slightly transparent to match navbar */
+  transition: opacity 0.2s; /* Smooth opacity change on hover */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/appearance */
 }
 
-/* Hover effect for slider */
+/* Hover effect for volume slider to indicate interactivity */
 #volume-slider:hover {
-  opacity: 1; /* Fully opaque on hover */
+  opacity: 1; /* Fully opaque on hover for emphasis */
 }
 
-/* Style the slider thumb (handle) for WebKit browsers */
+/* Style the slider thumb for WebKit browsers (Chrome, Safari) */
 #volume-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
+  -webkit-appearance: none; /* Remove default thumb styling */
   appearance: none;
-  width: 20px; /* Size of thumb */
+  width: 20px; /* Size of thumb for easy grabbing */
+  height: 20px;
+  background: #ff6f61; /* Coral color to match active button highlights */
+  border-radius: 50%; /* Circular thumb for playful aesthetic */
+  cursor: pointer; /* Indicate draggability */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-slider-thumb */
+}
+
+/* Style the slider thumb for Firefox */
+#volume-slider::-moz-range-thumb {
+  width: 20px; /* Consistent size with WebKit */
   height: 20px;
   background: #ff6f61; /* Match active button color */
   border-radius: 50%; /* Circular thumb */
   cursor: pointer;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/::-moz-range-thumb */
 }
 
-/* Style the slider thumb for Firefox */
-#volume-slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  background: #ff6f61;
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
-/* Styles the song selection buttons */
+/* Style song selection buttons for choosing melodies */
 .song-btn {
-  background: none; /* No background */
-  border: none; /* No border */
-  font-size: 2rem; /* Large icon size */
-  color: #333; /* Dark icon color */
-  margin: 0 20px; /* Horizontal spacing */
-  cursor: pointer; /* Pointer cursor on hover */
+  background: none; /* No background for icon-only design */
+  border: none; /* No border for clean look */
+  font-size: 2rem; /* Large icon size for visibility and kid-friendly interaction */
+  color: #333; /* Dark gray for contrast */
+  margin: 0 20px; /* Horizontal spacing between buttons */
+  cursor: pointer; /* Indicate interactivity */
   transition: transform 0.2s; /* Smooth scale on hover */
   /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/transition */
 }
 
-/* Specific styling for Mary Had a Little Lamb button to ensure dog icon visibility */
+/* Specific styling for Mary Had a Little Lamb button (if added later) */
 .song-btn[data-song="mary"] {
-  color: #2b2b2b; /* Darker icon color for contrast */
+  color: #2b2b2b; /* Slightly darker for contrast */
   position: relative; /* For positioning fallback SVG */
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Subtle shadow for visibility */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Shadow for icon visibility */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/text-shadow */
 }
 
-/* Hide SVG fallback unless Font Awesome fails */
+/* Hide SVG fallback for Mary Had a Little Lamb unless Font Awesome fails */
 .song-btn[data-song="mary"] .dog-icon-fallback {
   display: none; /* Hidden by default */
-  width: 2rem; /* Matches font-size */
+  width: 2rem; /* Match icon size */
   height: 2rem;
-  fill: #2b2b2b; /* Matches icon color */
+  fill: #2b2b2b; /* Match icon color */
 }
 
-/* Show SVG fallback if Font Awesome fails */
+/* Show SVG fallback if Font Awesome fails to load */
 .font-awesome-fail .song-btn[data-song="mary"] .fa-solid.fa-dog {
-  display: none; /* Hide Font Awesome icon */
+  display: none; /* Hide Font Awesome dog icon */
 }
 .font-awesome-fail .song-btn[data-song="mary"] .dog-icon-fallback {
   display: block; /* Show SVG fallback */
 }
 
-/* Hover effect for buttons */
+/* Hover effect for song buttons to provide visual feedback */
 .song-btn:hover {
-  transform: scale(1.2); /* Scales up on hover */
+  transform: scale(1.2); /* Scale up for playful interaction */
 }
 
-/* Active song button style */
+/* Style for active song button to indicate current selection */
 .song-btn.active {
-  color: #ff6f61; /* Highlight color for active song */
+  color: #ff6f61; /* Coral highlight to match slider thumb */
 }
 
-/* Styles the p5.js canvas container to cover the entire viewport */
+/* Style the p5.js canvas container to cover the entire viewport */
 /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/position */
 #sketch-holder {
-  position: absolute; /* Positions canvas absolutely to cover the viewport */
-  top: 0; /* Aligns to top edge */
-  left: 0; /* Aligns to left edge */
-  width: 100%; /* Full width of viewport */
-  height: 100%; /* Full height of viewport */
+  position: absolute; /* Cover entire viewport */
+  top: 0; /* Align to top */
+  left: 0; /* Align to left */
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  /* Source: https://p5js.org/reference/#/p5/createCanvas */
 }
 
-/* Styles the instructions container with absolute positioning and fade-out animation */
-/* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/position */
+/* Style the instructions container with fade-out animation */
 .instructions {
-  position: absolute; /* Positions instructions over the canvas */
-  top: 60px; /* Places below navbar */
-  text-align: center; /* Centers text */
-  color: #fff; /* White text color for contrast */
-  z-index: 10; /* Ensures instructions appear above canvas */
-  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/text-shadow */
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Adds subtle shadow for readability */
-  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/animation */
-  animation: fadeOut 5s forwards; /* Applies fade-out animation over 5 seconds */
+  position: absolute; /* Position over canvas */
+  top: 60px; /* Below navbar to avoid overlap */
+  text-align: center; /* Center text */
+  color: #fff; /* White text for contrast on gradient */
+  z-index: 10; /* Above canvas but below navbar */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Shadow for readability */
+  animation: fadeOut 5s forwards; /* Fade out after 5 seconds */
+  pointer-events: none; /* Allow clicks to pass through */
   /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events */
-  pointer-events: none; /* Prevents instructions from blocking interactions */
 }
 
-/* Styles the main heading */
+/* Style the main heading for instructions */
 h1 {
-  font-size: 2.5rem; /* Large font size for prominence */
+  font-size: 2.5rem; /* Large size for prominence */
   margin-bottom: 10px; /* Space below heading */
 }
 
-/* Styles the paragraph text */
+/* Style the paragraph text for instructions */
 p {
-  font-size: 1.5rem; /* Moderately large font for readability */
+  font-size: 1.5rem; /* Readable size for kids */
 }
 
-/* Defines the fade-out animation for the instructions */
+/* Define fade-out animation for instructions to clear screen for interaction */
 /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/@keyframes */
 @keyframes fadeOut {
   0% {
     opacity: 1; /* Fully visible at start */
   }
   80% {
-    opacity: 1; /* Remains visible until 80% of animation */
+    opacity: 1; /* Stay visible until 80% of duration */
   }
   100% {
     opacity: 0; /* Fully transparent at end */
