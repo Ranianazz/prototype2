@@ -5,122 +5,140 @@ let shapes = []; // Array to store shape objects for animation
 let noteIndex = 0; // Tracks current note in the song sequence
 const cMajorPentatonic = [261.63, 293.66, 329.63, 392.0, 440.0]; // Frequencies for C major pentatonic scale (C4, D4, E4, G4, A4)
 // Source: https://en.wikipedia.org/wiki/Pentatonic_scale
-const songSequences = {
-  itsybitsy: [
-    0,
-    0,
-    1,
-    2,
-    2,
-    1,
-    0, // C4, C4, D4, E4, E4, D4, C4
-    1,
-    1,
-    2,
-    3,
-    3,
-    2, // D4, D4, E4, G4, G4, E4
-    0,
-    0,
-    1,
-    2,
-    2,
-    1,
-    0, // C4, C4, D4, E4, E4, D4, C4
-    1,
-    2,
-    3,
-    2,
-    1,
-    0, // D4, E4, G4, E4, D4, C4
-  ], // Itsy Bitsy Spider
-  oldmacdonald: [
-    0,
-    0,
-    0,
-    0,
-    2,
-    2,
-    0, // C4, C4, C4, C4, E4, E4, C4
-    1,
-    1,
-    0,
-    0,
-    1,
-    1, // D4, D4, C4, C4, D4, D4
-    2,
-    2,
-    3,
-    3,
-    2,
-    1,
-    0, // E4, E4, G4, G4, E4, D4, C4
-    0,
-    0,
-    0,
-    0,
-    0,
-    0, // C4, C4, C4, C4, C4, C4
-  ], // Old MacDonald Had a Farm
-  bingo: [
-    0,
-    0,
-    2,
-    2,
-    3,
-    3,
-    2, // C4, C4, E4, E4, G4, G4, E4
-    1,
-    1,
-    0,
-    0,
-    1,
-    1, // D4, D4, C4, C4, D4, D4
-    2,
-    2,
-    3,
-    3,
-    2,
-    1,
-    0, // E4, E4, G4, G4, E4, D4, C4
-    0,
-    0,
-    0,
-    0,
-    0,
-    0, // C4, C4, C4, C4, C4, C4
-  ], // BINGO
-  happy: [
-    0,
-    0,
-    1,
-    2,
-    0,
-    2,
-    1, // C4, C4, D4, E4, C4, E4, D4
-    0,
-    0,
-    1,
-    2,
-    1,
-    0, // C4, C4, D4, E4, D4, C4
-    1,
-    1,
-    2,
-    3,
-    2,
-    1,
-    0, // D4, D4, E4, G4, E4, D4, C4
-    0,
-    0,
-    1,
-    2,
-    1,
-    0, // C4, C4, D4, E4, D4, C4
-  ], // If You're Happy and You Know It
+const songs = {
+  twinkle: {
+    notes: [
+      0,
+      0,
+      3,
+      3,
+      4,
+      4,
+      3, // C4, C4, G4, G4, A4, A4, G4
+      2,
+      2,
+      1,
+      1,
+      0,
+      0,
+      1, // E4, E4, D4, D4, C4, C4, D4
+      3,
+      3,
+      2,
+      2,
+      1,
+      1,
+      0, // G4, G4, E4, E4, D4, D4, C4
+      3,
+      3,
+      2,
+      2,
+      1,
+      1,
+      0, // G4, G4, E4, E4, D4, D4, C4
+    ],
+    durations: Array(28).fill(0.5), // Default duration for Twinkle
+  },
+  itsy: {
+    notes: [
+      0,
+      0,
+      1,
+      2,
+      2,
+      1,
+      0, // C4, C4, D4, E4, E4, D4, C4 ("The itsy bitsy spider")
+      1,
+      2,
+      3, // D4, E4, G4 ("climbed up the")
+      4,
+      4,
+      3,
+      2,
+      1,
+      0, // A4, A4, G4, E4, D4, C4 ("water spout")
+      0,
+      0,
+      1,
+      2,
+      2,
+      1,
+      0, // C4, C4, D4, E4, E4, D4, C4 ("Out came the sun")
+      1,
+      2,
+      3, // D4, E4, G4 ("dried up all")
+      4,
+      3,
+      2,
+      1,
+      0, // A4, G4, E4, D4, C4 ("the rain")
+    ],
+    durations: [
+      0.3,
+      0.3,
+      0.3,
+      0.5,
+      0.5,
+      0.3,
+      0.3, // Short for "itsy bitsy", normal for "spider"
+      0.3,
+      0.5,
+      0.7, // Short for "climbed", longer for "up"
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.7, // Normal for "water", longer for "spout"
+      0.3,
+      0.3,
+      0.3,
+      0.5,
+      0.5,
+      0.3,
+      0.3, // Short for "out came", normal for "sun"
+      0.3,
+      0.5,
+      0.7, // Short for "dried", longer for "up"
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.7, // Normal for "all the", longer for "rain"
+    ],
+  },
+  happy: {
+    notes: [
+      0,
+      0,
+      1,
+      0,
+      3,
+      2, // C4, C4, D4, C4, G4, E4
+      0,
+      0,
+      1,
+      0,
+      4,
+      3, // C4, C4, D4, C4, A4, G4
+      0,
+      0,
+      0,
+      2,
+      3,
+      1,
+      0, // C4, C4, C4, E4, G4, D4, C4
+      4,
+      4,
+      3,
+      1,
+      2,
+      1, // A4, A4, G4, D4, E4, D4
+    ],
+    durations: Array(26).fill(0.5), // Default duration for Happy
+  },
 };
-let currentSong = "itsybitsy"; // Default song
-let reverb, lowPass, delay, panner; // Audio effects
+let currentSong = "itsy"; // Default song
 
 // Sets up the p5.js canvas and audio context
 // Source: https://p5js.org/reference/#/p5/setup
@@ -130,20 +148,12 @@ function setup() {
   background(255, 255, 255, 0); // Sets transparent background
   // Source: https://p5js.org/reference/#/p5/getAudioContext
   audioContext = getAudioContext(); // Initializes p5.js audio context
-  // Initialize audio effects
-  // Source: https://p5js.org/reference/#/p5.Reverb
-  reverb = new p5.Reverb();
-  reverb.drywet(0.3); // Moderate reverb mix
-  // Source: https://p5js.org/reference/#/p5.Filter
-  lowPass = new p5.Filter("lowpass");
-  lowPass.freq(800); // Low-pass filter at 800 Hz
-  // Source: https://p5js.org/reference/#/p5.Delay
-  delay = new p5.Delay();
-  delay.delayTime(0.2); // 200ms delay
-  delay.feedback(0.4); // Moderate feedback
-  // Source: https://p5js.org/reference/#/p5.Panner
-  panner = new p5.Panner();
-  console.log("Setup complete, audio context state:", audioContext.state); // Logs audio context state
+  console.log(
+    "Setup complete, audio context state:",
+    audioContext.state,
+    "at",
+    new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+  ); // Logs setup
   noLoop(); // Disables automatic draw loop to optimize performance
   setupSongButtons(); // Sets up song selection buttons
 }
@@ -157,20 +167,43 @@ function setupSongButtons() {
       noteIndex = 0; // Resets note index
       buttons.forEach((btn) => btn.classList.remove("active")); // Removes active class from all buttons
       button.classList.add("active"); // Adds active class to clicked button
-      console.log("Selected song:", currentSong); // Logs song selection
+      console.log(
+        "Selected song:",
+        currentSong,
+        "at",
+        new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+      ); // Logs song selection with timestamp
+      if (currentSong === "twinkle") {
+        console.log(
+          "Twinkle Twinkle Little Star selected, sequence:",
+          songs.twinkle.notes
+        ); // Debug Twinkle selection
+      } else if (currentSong === "itsy") {
+        console.log(
+          "Itsy Bitsy Spider selected, sequence:",
+          songs.itsy.notes,
+          "durations:",
+          songs.itsy.durations
+        ); // Debug Itsy selection
+      } else if (currentSong === "happy") {
+        console.log("Happy Birthday selected, sequence:", songs.happy.notes); // Debug Happy selection
+      }
     });
   });
   // Set default song button as active
-  document
-    .querySelector('.song-btn[data-song="itsybitsy"]')
-    .classList.add("active");
+  document.querySelector('.song-btn[data-song="itsy"]').classList.add("active");
 }
 
 // Draws and updates all shapes on the canvas
 // Source: https://p5js.org/reference/#/p5/draw
 function draw() {
   clear(); // Clears the canvas for each frame
-  console.log("Drawing", shapes.length, "shapes"); // Logs number of shapes being drawn
+  console.log(
+    "Drawing",
+    shapes.length,
+    "shapes at",
+    new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+  ); // Logs number of shapes being drawn
   for (let i = shapes.length - 1; i >= 0; i--) {
     // Iterates through shapes in reverse to safely remove them
     shapes[i].update(); // Updates shape properties (size, lifespan)
@@ -191,10 +224,18 @@ function touchStarted() {
     audioContext
       .resume() // Resumes audio context for user interaction compliance
       .then(() => {
-        console.log("AudioContext resumed successfully"); // Logs successful resume
+        console.log(
+          "AudioContext resumed successfully at",
+          new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+        ); // Logs successful resume
       })
       .catch((err) => {
-        console.error("AudioContext resume failed:", err); // Logs any errors
+        console.error(
+          "AudioContext resume failed:",
+          err,
+          "at",
+          new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+        ); // Logs any errors
       });
   }
   createNoteAndShape(mouseX, mouseY); // Creates a note and shape at touch position
@@ -205,7 +246,13 @@ function touchStarted() {
 // Handles mouse clicks to create shapes/notes (non-touch devices)
 // Source: https://p5js.org/reference/#/p5/mousePressed
 function mousePressed() {
-  console.log("Mouse pressed at:", mouseX, mouseY); // Logs click position
+  console.log(
+    "Mouse pressed at:",
+    mouseX,
+    mouseY,
+    "at",
+    new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+  ); // Logs click position
   if (!touches.length) {
     // Ensures mouse event doesn't fire during touch
     createNoteAndShape(mouseX, mouseY); // Creates a note and shape at click position
@@ -215,165 +262,147 @@ function mousePressed() {
 
 // Creates a note with instrument-specific sound and a shape at the specified coordinates
 function createNoteAndShape(x, y) {
-  console.log("Creating note and shape at:", x, y, "for song:", currentSong); // Logs creation position and song
+  console.log(
+    "Creating note and shape at:",
+    x,
+    y,
+    "for song:",
+    currentSong,
+    "note index:",
+    noteIndex,
+    "at",
+    new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+  ); // Logs creation details
   try {
     // Primary oscillator for the base tone
     // Source: https://p5js.org/reference/#/p5.Oscillator
-    let osc1 = new p5.Oscillator(); // Creates a new p5.js oscillator
-    let osc2 = new p5.Oscillator(); // Secondary oscillator for harmonic richness
+    let osc = new p5.Oscillator("sine"); // Creates a new p5.js oscillator with sine wave
     let freq =
       cMajorPentatonic[
-        songSequences[currentSong][
-          noteIndex % songSequences[currentSong].length
-        ]
+        songs[currentSong].notes[noteIndex % songs[currentSong].notes.length]
       ]; // Selects frequency from current song sequence
-    let duration = random(0.4, 0.6); // Random duration for note
-    let amplitude = random(0.3, 0.5); // Random amplitude for effect
-
-    // Configure instrument based on song
-    if (currentSong === "itsybitsy") {
-      osc1.setType("triangle"); // Triangle wave for light, spidery feel
-      osc2.setType("triangle");
-      osc1.freq(freq); // Sets oscillator frequency
-      osc1.amp(amplitude); // Sets amplitude
-      osc2.freq(freq * 2); // Octave higher
-      osc2.amp(amplitude * 0.3); // Lower amplitude for harmonic
-      osc2.detune.setValueAtTime(random(-10, 10), 0); // Slight detune
-      osc1.connect(reverb); // Apply reverb
-      osc2.connect(reverb);
-    } else if (currentSong === "oldmacdonald") {
-      osc1.setType("square"); // Square wave for rustic tone
-      osc2.setType("square");
-      osc1.freq(freq);
-      osc1.amp(amplitude);
-      osc2.freq(freq * 1.5); // Fifth higher for harmony
-      osc2.amp(amplitude * 0.2);
-      osc2.detune.setValueAtTime(random(-5, 5), 0);
-      osc1.connect(lowPass); // Apply low-pass filter
-      osc2.connect(lowPass);
-    } else if (currentSong === "bingo") {
-      osc1.setType("sawtooth"); // Sawtooth wave for lively tone
-      osc2.setType("sawtooth");
-      osc1.freq(freq);
-      osc1.amp(amplitude);
-      osc2.freq(freq * 2);
-      osc2.amp(amplitude * 0.3);
-      osc2.detune.setValueAtTime(random(-15, 15), 0);
-      panner.pan(random(-0.5, 0.5)); // Random panning
-      osc1.connect(panner);
-      osc2.connect(panner);
-    } else if (currentSong === "happy") {
-      osc1.setType("sine"); // Sine wave for bright, happy tone
-      osc2.setType("sine");
-      osc1.freq(freq);
-      osc1.amp(amplitude);
-      osc2.freq(freq * 2);
-      osc2.amp(amplitude * 0.3);
-      osc2.detune.setValueAtTime(random(-10, 10), 0);
-      osc1.connect(delay); // Apply delay
-      osc2.connect(delay);
+    let duration =
+      songs[currentSong].durations[
+        noteIndex % songs[currentSong].durations.length
+      ] || random(0.4, 0.6); // Uses specific duration or random fallback
+    let amplitude = random(0.4, 0.6); // Random amplitude for all songs
+    osc.setType("sine"); // Sine wave for smooth tone
+    osc.freq(freq);
+    osc.amp(amplitude);
+    if (currentSong === "twinkle") {
+      osc.detune.setValueAtTime(random(-5, 5), 0); // Subtle detune for Twinkle
     }
-
-    osc1.start(); // Starts the oscillator
-    osc1.amp(0, duration); // Fades out amplitude
-    osc2.start();
-    osc2.amp(0, duration);
-
+    osc.start(); // Starts the oscillator
+    osc.amp(0, duration); // Fades out amplitude
     console.log(
-      "Sound created: instrument for",
+      "Sound created: sine wave for",
       currentSong,
       "at",
       freq,
       "Hz, duration:",
       duration,
       "amp:",
-      amplitude
+      amplitude,
+      "at",
+      new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
     ); // Logs sound details
-    noteIndex = (noteIndex + 1) % songSequences[currentSong].length; // Advances to next note
+    if (currentSong === "twinkle") {
+      console.log(
+        "Twinkle note played, frequency:",
+        freq,
+        "note index:",
+        noteIndex
+      ); // Debug Twinkle note
+    } else if (currentSong === "itsy") {
+      console.log(
+        "Itsy Bitsy Spider note played, frequency:",
+        freq,
+        "note index:",
+        noteIndex,
+        "duration:",
+        duration
+      ); // Debug Itsy note
+    } else if (currentSong === "happy") {
+      console.log(
+        "Happy Birthday note played, frequency:",
+        freq,
+        "note index:",
+        noteIndex
+      ); // Debug Happy note
+    }
+    noteIndex = (noteIndex + 1) % songs[currentSong].notes.length; // Advances to next note
   } catch (e) {
-    console.error("p5.Oscillator failed:", e); // Logs any errors with p5.js oscillators
+    console.error(
+      "p5.Oscillator failed for",
+      currentSong,
+      ":",
+      e,
+      "at",
+      new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+    ); // Logs any errors with p5.js oscillator
     // Fallback to raw Web Audio API
     let freq =
       cMajorPentatonic[
-        songSequences[currentSong][
-          noteIndex % songSequences[currentSong].length
-        ]
+        songs[currentSong].notes[noteIndex % songs[currentSong].notes.length]
       ]; // Selects frequency
-    let duration = random(0.4, 0.6); // Random duration
-    let amplitude = random(0.3, 0.5); // Random amplitude
-
-    // Primary oscillator using Web Audio API
-    // Source: https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode
-    let rawOsc1 = audioContext.createOscillator(); // Creates oscillator
-    let rawOsc2 = audioContext.createOscillator(); // Secondary oscillator
-    let gain1 = audioContext.createGain(); // Creates gain node
-    let gain2 = audioContext.createGain(); // Secondary gain node
-    let oscType, connectNode;
-
-    // Configure fallback instrument
-    if (currentSong === "itsybitsy") {
-      oscType = "triangle";
-      connectNode = audioContext.createConvolver(); // Simplified reverb fallback
-    } else if (currentSong === "oldmacdonald") {
-      oscType = "square";
-      connectNode = audioContext.createBiquadFilter();
-      connectNode.type = "lowpass";
-      connectNode.frequency.setValueAtTime(800, audioContext.currentTime);
-    } else if (currentSong === "bingo") {
-      oscType = "sawtooth";
-      connectNode = audioContext.createStereoPanner();
-      connectNode.pan.setValueAtTime(
-        random(-0.5, 0.5),
-        audioContext.currentTime
-      );
-    } else {
-      oscType = "sine";
-      connectNode = audioContext.createGain(); // Simplified delay fallback
+    let duration =
+      songs[currentSong].durations[
+        noteIndex % songs[currentSong].durations.length
+      ] || random(0.4, 0.6); // Uses specific duration or random fallback
+    let amplitude = random(0.4, 0.6); // Random amplitude
+    let rawOsc = audioContext.createOscillator(); // Creates oscillator
+    let gain = audioContext.createGain(); // Creates gain node
+    rawOsc.type = "sine";
+    rawOsc.frequency.setValueAtTime(freq, audioContext.currentTime);
+    if (currentSong === "twinkle") {
+      rawOsc.detune.setValueAtTime(random(-5, 5), 0); // Subtle detune for Twinkle
     }
-
-    rawOsc1.type = oscType;
-    rawOsc1.frequency.setValueAtTime(freq, audioContext.currentTime);
-    gain1.gain.setValueAtTime(amplitude, audioContext.currentTime);
-    gain1.gain.exponentialRampToValueAtTime(
+    gain.gain.setValueAtTime(amplitude, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
       0.01,
       audioContext.currentTime + duration
     );
-    rawOsc1.connect(gain1);
-    gain1.connect(connectNode);
-    connectNode.connect(audioContext.destination);
-    rawOsc1.start();
-    rawOsc1.stop(audioContext.currentTime + duration);
-
-    rawOsc2.type = oscType;
-    rawOsc2.frequency.setValueAtTime(
-      freq * (currentSong === "oldmacdonald" ? 1.5 : 2),
-      audioContext.currentTime
-    );
-    rawOsc2.detune.setValueAtTime(random(-15, 15), 0);
-    gain2.gain.setValueAtTime(
-      amplitude * (currentSong === "oldmacdonald" ? 0.2 : 0.3),
-      audioContext.currentTime
-    );
-    gain2.gain.exponentialRampToValueAtTime(
-      0.01,
-      audioContext.currentTime + duration
-    );
-    rawOsc2.connect(gain2);
-    gain2.connect(connectNode);
-    rawOsc2.start();
-    rawOsc2.stop(audioContext.currentTime + duration);
-
+    rawOsc.connect(gain);
+    gain.connect(audioContext.destination);
+    rawOsc.start();
+    rawOsc.stop(audioContext.currentTime + duration);
     console.log(
-      "Fallback sound created: instrument for",
+      "Fallback sound created: sine wave for",
       currentSong,
       "at",
       freq,
       "Hz, duration:",
       duration,
       "amp:",
-      amplitude
+      amplitude,
+      "at",
+      new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
     ); // Logs fallback sound details
-    noteIndex = (noteIndex + 1) % songSequences[currentSong].length; // Advances to next note
+    if (currentSong === "twinkle") {
+      console.log(
+        "Twinkle fallback note played, frequency:",
+        freq,
+        "note index:",
+        noteIndex
+      ); // Debug Twinkle fallback
+    } else if (currentSong === "itsy") {
+      console.log(
+        "Itsy Bitsy Spider fallback note played, frequency:",
+        freq,
+        "note index:",
+        noteIndex,
+        "duration:",
+        duration
+      ); // Debug Itsy fallback
+    } else if (currentSong === "happy") {
+      console.log(
+        "Happy Birthday fallback note played, frequency:",
+        freq,
+        "note index:",
+        noteIndex
+      ); // Debug Happy fallback
+    }
+    noteIndex = (noteIndex + 1) % songs[currentSong].notes.length; // Advances to next note
   }
   // Source: https://p5js.org/reference/#/p5/color
   shapes.push(
@@ -381,7 +410,7 @@ function createNoteAndShape(x, y) {
       x,
       y,
       random(50, 150), // Random size for shape
-      color(random(200, 255), random(200, 255), random(200, 255), 800) // Random color with fixed alpha
+      color(random(200, 255), random(200, 255), random(200, 255), 800) // Random color with fixed high alpha
     )
   ); // Adds new shape to array
 }
