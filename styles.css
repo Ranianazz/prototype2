@@ -1,67 +1,203 @@
-/* Original background */
+/* Applies global box-sizing to ensure padding and borders are included in element dimensions */
+/* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing */
+* {
+  box-sizing: border-box;
+}
+
+/* Styles the body with a gradient background and centers content using flexbox */
+/* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/background */
 body {
-  margin: 0;
-  overflow: hidden;
-  background: linear-gradient(135deg, #ffb6c1, #b19cd9, #87cefa);
-  height: 100vh;
-  font-family: "Comic Sans MS", sans-serif;
+  margin: 0; /* Removes default margin */
+  padding: 0; /* Removes default padding */
+  background: linear-gradient(
+    135deg,
+    #ffccbc,
+    #b899eb,
+    #80deea
+  ); /* Applies a colorful gradient background */
+  /* Source: https://fonts.google.com/specimen/Bubblegum+Sans */
+  font-family: "Bubblegum Sans", sans-serif; /* Sets playful Bubblegum Sans font */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/display#flex */
+  display: flex; /* Uses flexbox for layout */
+  flex-direction: column; /* Stacks navbar and content vertically */
+  justify-content: flex-start; /* Aligns content to top */
+  align-items: center; /* Horizontally centers content */
+  height: 100vh; /* Sets body height to full viewport height */
+  overflow: hidden; /* Prevents scrolling */
 }
 
-/* Original nav styling */
-nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-  z-index: 10;
+/* Styles the navigation bar */
+.navbar {
+  position: absolute; /* Positions navbar at top */
+  top: 0; /* Aligns to top edge */
+  width: 100%; /* Full width */
+  background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+  text-align: center; /* Centers buttons */
+  padding: 10px 0; /* Vertical padding */
+  z-index: 20; /* Above canvas and instructions */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  display: flex; /* Use flexbox to align volume control and buttons */
+  align-items: center; /* Vertically center items */
+  justify-content: center; /* Center buttons, volume control will be positioned absolutely */
 }
 
-.song-btn {
-  background: rgba(255, 255, 255, 0.6);
-  border: none;
-  border-radius: 20px;
-  padding: 8px 16px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  margin: 0 5px;
-  transition: all 0.2s ease;
-}
-
-.song-btn:hover {
-  background: rgba(255, 255, 255, 0.9);
-}
-
-.song-btn.active {
-  background: gold;
-  color: white;
-}
-
-/* Canvas holder */
-#sketch-holder {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* --- New volume slider --- */
+/* Styles the volume control container */
 .volume-control {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: 10px;
+  position: absolute; /* Position in top right */
+  right: 20px; /* Space from right edge */
+  display: flex; /* Align button and slider */
+  align-items: center; /* Vertically center */
+  gap: 10px; /* Space between button and slider */
 }
 
-#volumeSlider {
-  width: 100px;
+/* Styles the mute button */
+.mute-btn {
+  background: none; /* No background */
+  border: none; /* No border */
+  font-size: 2rem; /* Match song button icon size */
+  color: #333; /* Dark icon color */
+  cursor: pointer; /* Pointer on hover */
+  transition: transform 0.2s; /* Smooth scale on hover */
+}
+
+/* Hover effect for mute button */
+.mute-btn:hover {
+  transform: scale(1.2); /* Match song button hover */
+}
+
+/* Styles the volume slider */
+#volume-slider {
+  width: 100px; /* Reasonable width for slider */
+  -webkit-appearance: none; /* Remove default browser styling */
+  appearance: none;
+  height: 8px; /* Thin track */
+  background: #fff; /* White track to match navbar */
+  border-radius: 5px; /* Rounded edges */
+  outline: none; /* Remove default outline */
+  opacity: 0.8; /* Slightly transparent */
+  transition: opacity 0.2s; /* Smooth opacity transition */
+}
+
+/* Hover effect for slider */
+#volume-slider:hover {
+  opacity: 1; /* Fully opaque on hover */
+}
+
+/* Style the slider thumb (handle) for WebKit browsers */
+#volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px; /* Size of thumb */
+  height: 20px;
+  background: #ff6f61; /* Match active button color */
+  border-radius: 50%; /* Circular thumb */
   cursor: pointer;
-  accent-color: #ffcc00;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+/* Style the slider thumb for Firefox */
+#volume-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #ff6f61;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Styles the song selection buttons */
+.song-btn {
+  background: none; /* No background */
+  border: none; /* No border */
+  font-size: 2rem; /* Large icon size */
+  color: #333; /* Dark icon color */
+  margin: 0 20px; /* Horizontal spacing */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: transform 0.2s; /* Smooth scale on hover */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/transition */
+}
+
+/* Specific styling for Mary Had a Little Lamb button to ensure dog icon visibility */
+.song-btn[data-song="mary"] {
+  color: #2b2b2b; /* Darker icon color for contrast */
+  position: relative; /* For positioning fallback SVG */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Subtle shadow for visibility */
+}
+
+/* Hide SVG fallback unless Font Awesome fails */
+.song-btn[data-song="mary"] .dog-icon-fallback {
+  display: none; /* Hidden by default */
+  width: 2rem; /* Matches font-size */
+  height: 2rem;
+  fill: #2b2b2b; /* Matches icon color */
+}
+
+/* Show SVG fallback if Font Awesome fails */
+.font-awesome-fail .song-btn[data-song="mary"] .fa-solid.fa-dog {
+  display: none; /* Hide Font Awesome icon */
+}
+.font-awesome-fail .song-btn[data-song="mary"] .dog-icon-fallback {
+  display: block; /* Show SVG fallback */
+}
+
+/* Hover effect for buttons */
+.song-btn:hover {
+  transform: scale(1.2); /* Scales up on hover */
+}
+
+/* Active song button style */
+.song-btn.active {
+  color: #ff6f61; /* Highlight color for active song */
+}
+
+/* Styles the p5.js canvas container to cover the entire viewport */
+/* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/position */
+#sketch-holder {
+  position: absolute; /* Positions canvas absolutely to cover the viewport */
+  top: 0; /* Aligns to top edge */
+  left: 0; /* Aligns to left edge */
+  width: 100%; /* Full width of viewport */
+  height: 100%; /* Full height of viewport */
+}
+
+/* Styles the instructions container with absolute positioning and fade-out animation */
+/* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/position */
+.instructions {
+  position: absolute; /* Positions instructions over the canvas */
+  top: 60px; /* Places below navbar */
+  text-align: center; /* Centers text */
+  color: #fff; /* White text color for contrast */
+  z-index: 10; /* Ensures instructions appear above canvas */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/text-shadow */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Adds subtle shadow for readability */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/animation */
+  animation: fadeOut 5s forwards; /* Applies fade-out animation over 5 seconds */
+  /* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events */
+  pointer-events: none; /* Prevents instructions from blocking interactions */
+}
+
+/* Styles the main heading */
+h1 {
+  font-size: 2.5rem; /* Large font size for prominence */
+  margin-bottom: 10px; /* Space below heading */
+}
+
+/* Styles the paragraph text */
+p {
+  font-size: 1.5rem; /* Moderately large font for readability */
+}
+
+/* Defines the fade-out animation for the instructions */
+/* Source: https://developer.mozilla.org/en-US/docs/Web/CSS/@keyframes */
+@keyframes fadeOut {
+  0% {
+    opacity: 1; /* Fully visible at start */
+  }
+  80% {
+    opacity: 1; /* Remains visible until 80% of animation */
+  }
+  100% {
+    opacity: 0; /* Fully transparent at end */
+  }
 }

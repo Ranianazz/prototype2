@@ -1,36 +1,82 @@
 <!DOCTYPE html>
+<!-- Declares the document type as HTML5 -->
+<!-- Source: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/html -->
 <html lang="en">
   <head>
+    <!-- Specifies UTF-8 character encoding for the document -->
+    <!-- Source: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#attr-charset -->
     <meta charset="UTF-8" />
+    <!-- Ensures responsive viewport scaling for mobile devices -->
+    <!-- Source: https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kids' Magic Song Maker</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
+    <!-- Sets the document title displayed in the browser tab -->
+    <title>Kids' Interactive Song Maker</title>
+    <!-- Includes p5.js library for creating interactive canvas-based sketches -->
+    <!-- Source: https://p5js.org/reference/ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.min.js"></script>
+    <!-- Includes p5.sound addon for audio functionality in the sketch -->
+    <!-- Source: https://p5js.org/libraries/#p5.sound -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/addons/p5.sound.min.js"></script>
+    <!-- Links to an external stylesheet for custom styling -->
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Imports Bubblegum Sans font from Google Fonts for a playful, kid-friendly aesthetic -->
+    <!-- Source: https://fonts.google.com/specimen/Bubblegum+Sans -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Imports Font Awesome for icons -->
+    <!-- Source: https://fontawesome.com/ -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      onload="console.log('Font Awesome loaded successfully at', new Date().toLocaleString('en-AU', { timeZone: 'Australia/Sydney' }));"
+      onerror="console.error('Font Awesome failed to load at', new Date().toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })); document.body.classList.add('font-awesome-fail');"
+    />
   </head>
   <body>
-    <nav>
-      <!-- Song buttons -->
-      <button class="song-btn" data-song="itsy">Itsy Bitsy</button>
-      <button class="song-btn" data-song="twinkle">Twinkle</button>
-      <button class="song-btn" data-song="happy">Happy</button>
-
-      <!-- New volume slider -->
+    <!-- Navigation bar for song selection and volume control -->
+    <nav class="navbar">
+      <!-- Volume slider container -->
       <div class="volume-control">
-        🔊
+        <button id="mute-button" class="mute-btn" title="Toggle mute">
+          <i id="volume-icon" class="fas fa-volume-up"></i>
+        </button>
         <input
           type="range"
-          id="volumeSlider"
+          id="volume-slider"
           min="0"
           max="1"
           step="0.01"
           value="0.5"
+          aria-label="Adjust volume"
         />
       </div>
+      <button class="song-btn" data-song="itsy" title="Itsy Bitsy Spider">
+        <i class="fa-solid fa-spider"></i>
+      </button>
+      <button class="song-btn" data-song="happy" title="Happy Birthday">
+        <i class="fas fa-birthday-cake"></i>
+      </button>
+      <button
+        class="song-btn"
+        data-song="twinkle"
+        title="Twinkle Twinkle Little Star"
+      >
+        <i class="fas fa-star"></i>
+      </button>
     </nav>
-
+    <!-- Container for the p5.js canvas where the interactive sketch will be rendered -->
+    <!-- Source: https://p5js.org/reference/#/p5/setup -->
     <div id="sketch-holder"></div>
-
+    <!-- Container for instructions displayed to the user -->
+    <div class="instructions">
+      <!-- Main heading for the interactive application -->
+      <h1>Magic Song Maker!</h1>
+      <!-- Brief instructions for user interaction -->
+      <p>Tap or click to create a fun song with shapes! Pick a song above!</p>
+    </div>
+    <!-- Includes external JavaScript file containing the p5.js sketch logic -->
     <script src="sketch.js"></script>
   </body>
 </html>

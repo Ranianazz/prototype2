@@ -2,7 +2,10 @@ let audioContext;
 let shapes = [];
 let noteIndex = 0;
 let currentSong = "itsy";
-let masterVolume = 0.5; // volume variable
+let currentVolume = 0.5; // Default volume (midpoint)
+let lastVolume = 0.5; // Store last non-zero volume
+let isMuted = false; // Track mute state
+let oscillators = []; // Track active oscillators
 
 const cMajorPentatonic = [261.63, 293.66, 329.63, 392.0, 440.0];
 
@@ -24,30 +27,128 @@ const songs = {
 function setup() {
   let canvas = createCanvas(windowWidth, windowHeight);
   canvas.parent("sketch-holder");
-  canvas.style("pointer-events", "none");
-  clear();
+  canvas.style("pointer-events", "none"); // lets clicks pass through to buttons
+  clear(); // make sure initial canvas is transparent
   audioContext = getAudioContext();
+  // Resume audio context on setup
+  if (audioContext.state !== "running") {
+    audioContext.resume().then(() => {
+      console.log(
+        "Audio context resumed in setup at",
+        new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+      );
+    });
+  }
   setupSongButtons();
-  setupVolumeSlider();
+  setupVolumeControl();
   frameRate(30);
 }
 
 function draw() {
-  clear(); // transparent so background shows through
+  // Use transparent background instead of solid white
+  clear(); // keeps your CSS gradient visible
+
+  // Optional: add a faint overlay for trails (uncomment for motion blur)
+  // fill(255, 255, 255, 20);
+  // rect(0, 0, width, height);
+
   for (let shape of shapes) {
     shape.update();
     shape.display();
   }
 }
 
+function setupVolumeControl() {
+  const volumeSlider = document.getElementById("volume-slider");
+  const muteButton = document.getElementById("mute-button");
+  const volumeIcon = document.getElementById("volume-icon");
+
+  // Resume audio context on first slider or button interaction
+  let hasInteracted = false;
+
+  // Slider event listeners
+  ["input", "change"].forEach((eventType) => {
+    volumeSlider.addEventListener(eventType, () => {
+      if (!hasInteracted && audioContext.state !== "running") {
+        audioContext.resume().then(() => {
+          console.log(
+            "Audio context resumed on volume slider interaction at",
+            new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+          );
+        });
+        hasInteracted = true;
+      }
+      // Update volume (0 to 1), mute at left tip
+      currentVolume = parseFloat(volumeSlider.value);
+      isMuted = currentVolume === 0;
+      if (!isMuted) {
+        lastVolume = currentVolume; // Store non-zero volume
+      }
+      // Stop all oscillators if muted
+      if (isMuted) {
+        oscillators.forEach((osc) => {
+          osc.stop();
+          console.log(
+            "Oscillator stopped due to mute at",
+            new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+          );
+        });
+        oscillators = [];
+      }
+      // Update volume icon
+      volumeIcon.className = isMuted
+        ? "fas fa-volume-mute"
+        : "fas fa-volume-up";
+      console.log(`Volume set to: ${currentVolume}, Muted: ${isMuted}`);
+    });
+  });
+
+  // Mute button event listener
+  muteButton.addEventListener("click", () => {
+    if (!hasInteracted && audioContext.state !== "running") {
+      audioContext.resume().then(() => {
+        console.log(
+          "Audio context resumed on mute button click at",
+          new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+        );
+      });
+      hasInteracted = true;
+    }
+    isMuted = !isMuted;
+    if (isMuted) {
+      currentVolume = 0;
+      volumeSlider.value = 0;
+      // Stop all oscillators
+      oscillators.forEach((osc) => {
+        osc.stop();
+        console.log(
+          "Oscillator stopped due to mute button at",
+          new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+        );
+      });
+      oscillators = [];
+    } else {
+      currentVolume = lastVolume;
+      volumeSlider.value = lastVolume;
+    }
+    // Update volume icon
+    volumeIcon.className = isMuted ? "fas fa-volume-mute" : "fas fa-volume-up";
+    console.log(`Mute toggled: ${isMuted}, Volume: ${currentVolume}`);
+  });
+}
+
 function mousePressed() {
   if (audioContext.state !== "running") {
-    audioContext.resume();
+    audioContext.resume().then(() => {
+      console.log(
+        "Audio context resumed on mouse press at",
+        new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+      );
+    });
   }
   createNoteAndShape(mouseX, mouseY);
 }
 
-// Setup song button functionality
 function setupSongButtons() {
   const buttons = document.querySelectorAll(".song-btn");
   buttons.forEach((btn) => {
@@ -61,34 +162,44 @@ function setupSongButtons() {
   document.querySelector('.song-btn[data-song="itsy"]').classList.add("active");
 }
 
-// Volume slider setup
-function setupVolumeSlider() {
-  const slider = document.getElementById("volumeSlider");
-  slider.addEventListener("input", () => {
-    masterVolume = parseFloat(slider.value);
-  });
-}
-
-// Sound and shape generation
 function createNoteAndShape(x, y) {
+  if (isMuted) {
+    console.log("No sound: Muted state");
+    // Create shape without sound
+    shapes.push(
+      new DancingShape(
+        x,
+        y,
+        random(60, 150),
+        color(random(150, 255), random(150, 255), random(150, 255))
+      )
+    );
+    return;
+  }
+
   const song = songs[currentSong];
   const note = song.notes[noteIndex % song.notes.length];
   const freq = cMajorPentatonic[note];
   const duration = song.durations[noteIndex % song.durations.length];
   noteIndex++;
 
-  // Play note with adjustable volume
+  // Audio logic with envelope
   const osc = new p5.Oscillator("sine");
   const env = new p5.Envelope();
   env.setADSR(0.05, 0.2, 0.1, 0.2);
-  env.setRange(masterVolume, 0);
+  env.setRange(currentVolume, 0); // Volume from 0 (mute) to 1 (loud)
 
   osc.freq(freq);
   osc.start();
+  oscillators.push(osc); // Track oscillator
   env.play(osc, 0, duration);
   osc.stop(audioContext.currentTime + duration + 0.2);
+  // Remove oscillator from list after stopping
+  setTimeout(() => {
+    oscillators = oscillators.filter((o) => o !== osc);
+  }, (duration + 0.2) * 1000);
 
-  // Dancing shape
+  // Create new dancing shape
   shapes.push(
     new DancingShape(
       x,
@@ -99,7 +210,7 @@ function createNoteAndShape(x, y) {
   );
 }
 
-// Dancing shapes class
+// Dancing Shape Class
 class DancingShape {
   constructor(x, y, size, col) {
     this.baseX = x;
